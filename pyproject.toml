@@ -1,0 +1,38 @@
+[project]
+name = "smollm-sft"
+version = "0.1.0"
+description = "Config-driven SmolLM3 supervised fine-tuning, evaluation, and experiment tracking"
+readme = "README.md"
+authors = [
+    { name = "Danselem", email = "comradedaniel@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.15.0",
+    "dagshub>=0.7.3",
+    "datasets>=5.2.0",
+    "huggingface-hub>=2.4.0",
+    "mlflow>=3.18.0",
+    "nvidia-ml-py>=13.615.71",
+    "omegaconf>=2.4.0",
+    "psutil>=7.2.2",
+    "python-dotenv>=1.2.4",
+    "rouge-score>=0.1.2",
+    "tensorboard>=2.21.0",
+    "torch>=2.15.0",
+    "transformers>=5.23.0",
+    "trl>=1.18.0",
+]
+
+[project.scripts]
+smollm-sft = "smollm_sft:main"
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/smollm_sft"]
+
+[tool.uv]
+package = true

@@ -1,0 +1,83 @@
+project:
+  name: smollm3-sft
+  seed: 42
+  output_dir: outputs/SmolLM3-Custom-SFT
+  report_dir: reports
+
+model:
+  name: HuggingFaceTB/SmolLM3-3B-Base
+  revision: null
+  trust_remote_code: true
+  # Set this to the precision supported by your GPU: float32, float16, bfloat16.
+  dtype: bfloat16
+  # Leave null to let Trainer/Accelerate place the model.
+  # Set a device_map only when intentionally using model parallelism.
+  device_map: null
+
+dataset:
+  name: HuggingFaceTB/smoltalk2
+  config: SFT
+  split: smoltalk_everyday_convs_reasoning_Qwen3_32B_think
+  max_samples: 1000
+  train_fraction: 0.80
+  validation_fraction: 0.10
+  test_fraction: 0.10
+  deduplicate_exact_text: true
+  max_length: 2048
+
+training:
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 2
+  learning_rate: 5.0e-5
+  num_train_epochs: 1
+  max_steps: 500
+  warmup_steps: 50
+  weight_decay: 0.01
+  optim: adamw_torch
+  lr_scheduler_type: cosine
+  max_grad_norm: 1.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: false
+  logging_steps: 10
+  eval_steps: 50
+  save_steps: 50
+  save_total_limit: 2
+  dataloader_num_workers: 0
+  group_by_length: true
+  early_stopping_patience: 5
+  early_stopping_threshold: 0.0
+  load_best_model_at_end: true
+  metric_for_best_model: eval_loss
+  greater_is_better: false
+  include_num_input_tokens_seen: true
+
+evaluation:
+  generation:
+    enabled: true
+    num_samples: 50
+    max_new_tokens: 256
+    do_sample: false
+    temperature: 1.0
+    top_p: 1.0
+  rouge_l: true
+
+profiler:
+  enabled: false
+  wait_steps: 1
+  warmup_steps: 1
+  active_steps: 3
+  output_dir: profiler_traces
+
+tracking:
+  experiment_name: SmolLM3-SFT
+  run_name: SmolLM3-Custom-SFT
+  enable_system_metrics: true
+  log_final_model_artifact: false
+
+hub:
+  push_to_hub: true
+  repo_id: null
+  private: false
+  commit_message: Fine-tuned SmolLM3 with supervised fine-tuning

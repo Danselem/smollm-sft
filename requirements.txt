@@ -1,0 +1,14 @@
+accelerate
+dagshub
+datasets
+huggingface-hub
+mlflow
+nvidia-ml-py
+omegaconf
+psutil
+python-dotenv
+rouge-score
+tensorboard
+torch
+transformers
+trl
